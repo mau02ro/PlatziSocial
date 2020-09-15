@@ -14,7 +14,17 @@ async function get(tabla, id) {
 }
 
 async function upsert(tabla, data) {
-    db[collection].push(data);
+    if(!db[tabla]){
+        db[tabla] = []
+    }
+    db[tabla].push(data);
+}
+
+async function query(tabla, q){
+    let col = await list(tabla);
+    let keys = Object.keys(q)
+    let key = keys[0]
+    return col.filter(item => item[key] === q[key])[0] || null;
 }
 
 async function remove(tabla, id) {
@@ -26,4 +36,5 @@ module.exports = {
     get,
     upsert,
     remove,
+    query,
 };
